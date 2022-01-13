@@ -5,7 +5,7 @@ import com.intellij.psi.*
 import com.intellij.util.ProcessingContext
 import org.jetbrains.annotations.NotNull
 
-class FileReferenceContributor: PsiReferenceContributor() {
+class FileReferenceContributor : PsiReferenceContributor() {
     override fun registerReferenceProviders(@NotNull psiReferenceRegistrar: PsiReferenceRegistrar) {
         psiReferenceRegistrar.registerReferenceProvider(
             PlatformPatterns.psiElement(),
@@ -18,9 +18,7 @@ class FileReferenceContributor: PsiReferenceContributor() {
             if (element is PsiLiteralExpression && belongsToAnnotation(element)) {
                 return getFileReferences(element).toTypedArray()
             }
-
             return arrayOf()
-
         }
 
 

@@ -19,6 +19,15 @@
         <psi.referenceContributor id="FileReferenceImplicitDependency"
                                   implementation="com.acepero13.implicitdependency.references.FileReferenceContributor"/>
 
+        <localInspection language="JAVA"
+                         displayName="Implicit dependencies change together"
+                         groupPath="Java"
+                         groupBundle="messages.InspectionsBundle"
+                         groupKey="group.names.probable.bugs"
+                         enabledByDefault="true"
+                         level="WARNING"
+                         implementationClass="com.acepero13.implicitdependency.inspections.GitChangedInspection"/>
+
     </extensions>
 
     <actions>
