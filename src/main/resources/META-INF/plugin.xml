@@ -1,11 +1,11 @@
 <idea-plugin>
-    <id>org.example.ImplicitDependency</id>
-    <name>Plugin display name here</name>
-    <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+    <id>com.acepero13.ImplicitDependency</id>
+    <name>Implicit Dependency</name>
+    <vendor email="" url="">acepero13</vendor>
 
     <description><![CDATA[
-    Enter short description for your plugin here.<br>
-    <em>most HTML tags may be used</em>
+    Interprets @ImplicitDependency annotations in <b>Java</b></br>
+    Adds navigation to file dependencies and Inspections when one of the dependencies change
     ]]></description>
 
     <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
@@ -30,21 +30,5 @@
 
     </extensions>
 
-    <actions>
-        <action
-                id="ImplicitDependency.FindDependencies.ToolsMenu"
-                class="com.acepero13.implicitdependency.actions.ClickOnAnnotationAction"
-                text="Find Dependencies"
-                description="Ask a Question on Stack Overflow">
-            <add-to-group group-id="ToolsMenu" anchor="last"/>
-        </action>
-        <action
-                id="ImplicitDependency.FindDependencies.Editor"
-                class="com.acepero13.implicitdependency.actions.ClickOnAnnotationAction"
-                text="Find Dependencies"
-                description="Search on Stack Overflow">
-            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
-        </action>
 
-    </actions>
 </idea-plugin>

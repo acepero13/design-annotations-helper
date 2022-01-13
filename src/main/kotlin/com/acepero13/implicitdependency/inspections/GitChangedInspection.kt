@@ -1,12 +1,15 @@
 package com.acepero13.implicitdependency.inspections
 
+import com.acepero13.implicitdependency.commons.AnnotationUtils
 import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool
-import com.intellij.codeInspection.InspectionsBundle
 import com.intellij.codeInspection.ProblemsHolder
 import com.intellij.openapi.vcs.FileStatus
 import com.intellij.openapi.vcs.changes.ChangeListManager
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.psi.*
+import com.intellij.psi.JavaElementVisitor
+import com.intellij.psi.PsiAnnotation
+import com.intellij.psi.PsiElementVisitor
+import com.intellij.psi.PsiReferenceExpression
 
 
 class GitChangedInspection : AbstractBaseJavaLocalInspectionTool() {
@@ -24,12 +27,7 @@ class GitChangedInspection : AbstractBaseJavaLocalInspectionTool() {
      */
     override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
         return object : JavaElementVisitor() {
-            /**
-             * This string defines the short message shown to a user signaling the inspection found a problem.
-             * It reuses a string from the inspections bundle.
-             */
-            private val DESCRIPTION_TEMPLATE = "SDK " +
-                    InspectionsBundle.message("inspection.comparing.references.problem.descriptor")
+
 
             /**
              * Avoid defining visitors for both Reference and Binary expressions.
@@ -39,18 +37,12 @@ class GitChangedInspection : AbstractBaseJavaLocalInspectionTool() {
             override fun visitReferenceExpression(psiReferenceExpression: PsiReferenceExpression?) {}
 
             override fun visitAnnotation(annotation: PsiAnnotation?) {
-                if (annotation?.qualifiedName?.contains("ImplicitDependency") == true) {
+                if (AnnotationUtils.isAnnotatedAsImplicit(annotation?.qualifiedName)) {
 
-                    annotation.attributes.asSequence().map {
-                        annotation.findAttributeValue(it.attributeName)
-                    }
-                        .map { AnnotationContainer.of(it) }
-                        .map { it.listDependencies() }
-                        .flatten()
-                        .filter {
+                    annotation?.attributes?.asSequence()?.map { annotation.findAttributeValue(it.attributeName) }
+                        ?.map { AnnotationContainer.of(it) }?.map { it.listDependencies() }?.flatten()?.filter {
                             ChangeListManager.getInstance(annotation.project).getStatus(it) != FileStatus.NOT_CHANGED
-                        }
-                        .forEach { holder.registerProblem(annotation, buildProblemMessage(it)) }
+                        }?.forEach { holder.registerProblem(annotation, buildProblemMessage(it)) }
 
 
                 }

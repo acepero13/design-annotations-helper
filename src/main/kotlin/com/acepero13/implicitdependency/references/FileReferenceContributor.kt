@@ -1,5 +1,6 @@
 package com.acepero13.implicitdependency.references
 
+import com.acepero13.implicitdependency.commons.AnnotationUtils
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.*
 import com.intellij.util.ProcessingContext
@@ -25,7 +26,7 @@ class FileReferenceContributor : PsiReferenceContributor() {
         private fun belongsToAnnotation(element: PsiLiteralExpression): Boolean {
             var parent = element.parent
             while (parent != null) {
-                if (parent is PsiAnnotation && parent.qualifiedName?.contains("ImplicitDependency") == true) {
+                if (parent is PsiAnnotation && AnnotationUtils.isAnnotatedAsImplicit(parent.qualifiedName)) {
                     return true
                 }
                 parent = parent.parent
