@@ -39,16 +39,18 @@ class GitChangedInspection : AbstractBaseJavaLocalInspectionTool() {
             override fun visitReferenceExpression(psiReferenceExpression: PsiReferenceExpression?) {}
 
             override fun visitAnnotation(annotation: PsiAnnotation?) {
-                if (annotation?.qualifiedName.equals("ImplicitDependency")) {
+                if (annotation?.qualifiedName?.contains("ImplicitDependency") == true) {
 
-                    annotation?.attributes?.asSequence()?.map {
+                    annotation.attributes.asSequence().map {
                         annotation.findAttributeValue(it.attributeName)
                     }
-                        ?.map { AnnotationContainer.of(it) }
-                        ?.map { it.listDependencies() }
-                        ?.flatten()
-                        ?.filter { it -> ChangeListManager.getInstance(annotation.project).getStatus(it) != FileStatus.NOT_CHANGED }
-                        ?.forEach { it ->  holder.registerProblem(annotation, buildProblemMessage(it))}
+                        .map { AnnotationContainer.of(it) }
+                        .map { it.listDependencies() }
+                        .flatten()
+                        .filter {
+                            ChangeListManager.getInstance(annotation.project).getStatus(it) != FileStatus.NOT_CHANGED
+                        }
+                        .forEach { holder.registerProblem(annotation, buildProblemMessage(it)) }
 
 
                 }
@@ -58,7 +60,7 @@ class GitChangedInspection : AbstractBaseJavaLocalInspectionTool() {
         }
     }
 
-    fun buildProblemMessage(virtualFile: VirtualFile):String {
+    fun buildProblemMessage(virtualFile: VirtualFile): String {
         return "File ${virtualFile.name} has changed. This file should also change since they have an implicit dependency"
     }
 }

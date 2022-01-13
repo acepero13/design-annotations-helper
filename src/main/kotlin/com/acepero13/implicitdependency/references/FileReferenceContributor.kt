@@ -25,7 +25,7 @@ class FileReferenceContributor : PsiReferenceContributor() {
         private fun belongsToAnnotation(element: PsiLiteralExpression): Boolean {
             var parent = element.parent
             while (parent != null) {
-                if (parent is PsiAnnotation && parent.qualifiedName.equals("ImplicitDependency")) {
+                if (parent is PsiAnnotation && parent.qualifiedName?.contains("ImplicitDependency") == true) {
                     return true
                 }
                 parent = parent.parent
